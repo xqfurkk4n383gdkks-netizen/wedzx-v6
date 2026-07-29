@@ -168,6 +168,15 @@
             gap: 35px;
             position: relative;
             z-index: 5;
+            transition: filter 0.5s ease, opacity 0.5s ease;
+        }
+
+        /* Locked State */
+        .locked-app {
+            filter: blur(10px);
+            opacity: 0.2;
+            pointer-events: none !important;
+            user-select: none !important;
         }
 
         .panel-box {
@@ -249,7 +258,7 @@
             justify-content: space-between;
         }
 
-        select, input[type="text"], input[type="number"] {
+        select, input[type="text"], input[type="number"], input[type="password"] {
             width: 100%;
             padding: 14px 18px;
             background: rgba(20, 2, 6, 0.85);
@@ -262,12 +271,12 @@
             box-shadow: 0 0 10px rgba(255, 0, 60, 0.15);
         }
 
-        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+        select:focus, input:focus {
             border-color: var(--cyan-accent);
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
 
-        .btn-custom {
+        .btn-v6 {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #ff003c 0%, #800020 100%);
@@ -287,13 +296,13 @@
             overflow: hidden;
         }
 
-        .btn-custom:hover {
+        .btn-v6:hover {
             transform: translateY(-3px) scale(1.01);
             box-shadow: 0 0 40px var(--primary);
             background: linear-gradient(135deg, #ff1a53 0%, #a30029 100%);
         }
 
-        .btn-custom:active {
+        .btn-v6:active {
             transform: translateY(1px);
         }
 
@@ -469,6 +478,25 @@
             flex-direction: column;
             gap: 12px;
             margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(20, 2, 6, 0.85);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.05rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.15);
+            resize: vertical;
+        }
+
+        textarea:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
 
         .comments-list {
@@ -647,7 +675,7 @@
             width: 100vw;
             height: 100vh;
             background: rgba(3, 1, 2, 0.98);
-            z-index: 80;
+            z-index: 900;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -685,8 +713,8 @@
        ========================================== -->
     <div id="banned-overlay">
         <h1 style="font-size: 3.5rem; text-shadow: 0 0 20px red;">SİSTEM ENGELLENDİ</h1>
-        <p style="color: #fff; margin-top: 15px; font-size: 1.2rem;">WEDZX güvenlik protokolleri tarafından erişiminiz kalıcı olarak kısıtlandı.</p>
-        <p style="color: #666; margin-top: 8px;">Cihaz kütüphanesi / IP adresi kararlarda saklıdır.</p>
+        <p style="color: #fff; margin-top: 15px; font-size: 1.2rem;">wedzx güvenlik protokolleri tarafından erişiminiz kalıcı olarak kısıtlandı.</p>
+        <p style="color: #666; margin-top: 8px;">Cihaz kütüphanesi / IP adresi kayıtlarında saklıdır.</p>
     </div>
 
     <!-- ==========================================
@@ -694,26 +722,26 @@
        ========================================== -->
     <div id="tiktok-gateway">
         <div class="gateway-card">
-            <h1 style="font-family:'Orbitron'; color:var(--primary); font-size:2.2rem; text-shadow:0 0 15px var(--primary);">WEDZX KİLİTLİ</h1>
-            <p style="margin-top:15px; color:#ddd; font-size:1.1rem; line-height:1.5;">Gelişmiş Free Fire Hassasiyet ve Aim Trainer Motoruna erişmek için TikTok hesabımızı takip etmek **zorunludur**.</p>
-            
-            <a href="https://www.tiktok.com/@wedzx_" target="_blank" onclick="confirmFollow()" style="display:inline-block; margin-top:25px; padding:16px 32px; background:#000; border:2px solid var(--primary); color:#fff; font-family:'Orbitron'; font-size:1.2rem; font-weight:bold; border-radius:12px; text-decoration:none; box-shadow:0 0 25px var(--primary-glow); transition:0.3s;">
-                TAKİP ET: @wedzx_
+            <h1 style="font-family:'Orbitron'; color:var(--primary); font-size:2.2rem; text-shadow:0 0 15px var(--primary);">WEDZX KİLİT SİSTEMİ</h1>
+            <p style="margin-top:15px; color:#ddd; font-size:1.1rem; line-height:1.5;">Free Fire Hassasiyet ve Aim Trainer Motoruna erişmek için <b>@wedzx_</b> TikTok hesabımızı takip etmeniz zorunludur.</p>
+            <a href="https://www.tiktok.com/@wedzx_" target="_blank" id="tiktok-follow-btn" onclick="triggerTikTokTask()" style="display:inline-block; margin-top:25px; width:100%; padding:16px; background:linear-gradient(135deg, #00f0ff, #ff003c); border:none; color:#fff; font-family:'Orbitron'; font-size:1.1rem; font-weight:bold; border-radius:12px; text-decoration:none; box-shadow:0 0 25px rgba(255,0,60,0.5); transition:0.3s; cursor:pointer;">
+                <i class="fa-brands fa-tiktok"></i> TİKTOK'TA TAKİP ET VE KİLİDİ AÇ
             </a>
-            
-            <p style="margin-top:15px; font-size:0.85rem; color:#888;">Takip butonuna bastıktan sonra site otomatik açılacaktır.</p>
+            <p style="margin-top:15px; font-size:0.85rem; color:#888;" id="gateway-status-text">Butona tıkladıktan sonra kilit otomatik olarak kalkacaktır.</p>
         </div>
     </div>
 
-    <!-- Dynamic Backgrounds -->
+    <!-- ==========================================
+       DYNAMIC CANVAS VFX BACKGROUNDS
+       ========================================== -->
     <canvas id="bg-canvas"></canvas>
     <canvas id="matrix-canvas"></canvas>
 
     <!-- ==========================================
-       NAVIGATION BAR (LOGO WRAPS 4-CLICK ADMIN TRIGGER)
+       NAVIGATION BAR
        ========================================== -->
     <nav class="navbar">
-        <div class="brand-logo" id="main-logo" onclick="handleLogoClick()">WEDZX <span>SYSTEM</span></div>
+        <div class="brand-logo" onclick="handleLogoClick()">WEDZX <span>SYSTEM</span></div>
         <ul class="nav-links">
             <li class="nav-item active" onclick="scrollToSection('sens-section')">Hassasiyet</li>
             <li class="nav-item" onclick="scrollToSection('aim-section')">Aim Trainer</li>
@@ -723,9 +751,9 @@
     </nav>
 
     <!-- ==========================================
-       MAIN CONTENT CONTAINER
+       MAIN CONTENT CONTAINER (LOCKED INITIALLY)
        ========================================== -->
-    <div class="main-wrapper">
+    <div class="main-wrapper locked-app" id="main-app-container">
 
         <!-- SECTION 1: SENSITIVITY ENGINE -->
         <div class="panel-box" id="sens-section">
@@ -775,7 +803,7 @@
                 </div>
             </div>
 
-            <button class="btn-custom" onclick="calculateSensitivity()">Hassasiyet & DPI Motorunu Çalıştır</button>
+            <button class="btn-v6" onclick="calculateV6Sensitivity()">Hassasiyet & DPI Motorunu Çalıştır</button>
 
             <!-- Results Output -->
             <div class="sens-results-box" id="sens-output">
@@ -841,8 +869,8 @@
                 <canvas id="aim-canvas"></canvas>
 
                 <div style="display:flex; gap:15px; width:100%;">
-                    <button class="btn-custom" style="padding:10px; font-size:1rem;" onclick="startAimTrainer()">Poligonu Başlat</button>
-                    <button class="btn-custom" style="padding:10px; font-size:1rem; background:linear-gradient(135deg, #333, #111);" onclick="resetAimTrainer()">Sıfırla</button>
+                    <button class="btn-v6" style="padding:10px; font-size:1rem;" onclick="startAimTrainer()">Poligonu Başlat</button>
+                    <button class="btn-v6" style="padding:10px; font-size:1rem; background:linear-gradient(135deg, #333, #111);" onclick="resetAimTrainer()">Sıfırla</button>
                 </div>
             </div>
         </div>
@@ -892,7 +920,7 @@
                     <input type="text" id="comm-device" placeholder="Kullandığınız Cihaz">
                 </div>
                 <textarea id="comm-msg" rows="3" placeholder="Ayar denemeniz nasıl geçti? Yorumunuzu yazın..."></textarea>
-                <button class="btn-custom" style="padding:12px; font-size:1rem;" onclick="submitCommunityComment()">Yorum Yayınla</button>
+                <button class="btn-v6" style="padding:12px; font-size:1rem;" onclick="submitCommunityComment()">Yorum Yayınla</button>
             </div>
 
             <div class="comments-list" id="comments-container">
@@ -915,7 +943,7 @@
             <div id="admin-auth-view" style="padding:40px; text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:20px;">ADMIN AUTHENTICATION</h2>
                 <input type="password" id="admin-pass-input" placeholder="Güvenlik Şifresini Girin..." style="max-width:350px; margin:0 auto; display:block;">
-                <button class="btn-custom" style="max-width:350px; margin:20px auto 0 auto;" onclick="authenticateAdmin()">Sisteme Bağlan</button>
+                <button class="btn-v6" style="max-width:350px; margin:20px auto 0 auto;" onclick="authenticateAdmin()">Sisteme Bağlan</button>
             </div>
 
             <div class="terminal-body" id="admin-dashboard-view" style="display:none;">
@@ -951,100 +979,11 @@
     </footer>
 
     <!-- ==========================================
-       JAVASCRIPT ENGINE
+       10. JAVASCRIPT SYSTEM ENGINE
        ========================================== -->
     <script>
         /* ==========================================
-           1. STRICT TIKTOK LOCK SYSTEM
-           ========================================== */
-        function confirmFollow() {
-            // Sadece takip butonuna tıklanınca kilit kalıcı olarak açılır
-            localStorage.setItem('wedzx_followed', 'true');
-            setTimeout(() => {
-                document.getElementById('tiktok-gateway').style.display = 'none';
-            }, 1000);
-        }
-
-        // Sayfa yüklendiğinde takip edilip edilmediğini kontrol et
-        if (localStorage.getItem('wedzx_followed') === 'true') {
-            document.getElementById('tiktok-gateway').style.display = 'none';
-        }
-
-        // Ban ve Ziyaretçi Kontrolü
-        let visits = parseInt(localStorage.getItem('wedzx_visits') || '0');
-        let userBanned = localStorage.getItem('wedzx_banned') === 'true';
-
-        if (userBanned) {
-            document.getElementById('banned-overlay').style.display = 'flex';
-        } else {
-            visits++;
-            localStorage.setItem('wedzx_visits', visits);
-        }
-
-        /* ==========================================
-           2. SECRET ADMIN LOGIC (4-CLICKS ON LOGO)
-           ========================================== */
-        let logoClickCount = 0;
-        let logoClickTimer;
-
-        function handleLogoClick() {
-            logoClickCount++;
-            clearTimeout(logoClickTimer);
-
-            if (logoClickCount === 4) {
-                logoClickCount = 0;
-                document.getElementById('admin-modal').style.display = 'flex';
-            } else {
-                // 2 saniye içinde 4 kez tıklanmazsa sayacı sıfırla
-                logoClickTimer = setTimeout(() => {
-                    logoClickCount = 0;
-                }, 2000);
-            }
-        }
-
-        function closeAdminModal() {
-            document.getElementById('admin-modal').style.display = 'none';
-        }
-
-        function authenticateAdmin() {
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === 'wedzxV4xMavi') {
-                document.getElementById('admin-auth-view').style.display = 'none';
-                document.getElementById('admin-dashboard-view').style.display = 'block';
-                loadAdminLogs();
-            } else {
-                alert('YETKİSİZ ERİŞİM: Şifre Hatalı!');
-            }
-        }
-
-        function loadAdminLogs() {
-            document.getElementById('adm-visits').innerText = localStorage.getItem('wedzx_visits') || '0';
-            const logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
-            const logTable = document.getElementById('adm-log-table');
-            logTable.innerHTML = '';
-
-            logs.forEach(log => {
-                logTable.innerHTML += `
-                    <tr>
-                        <td>${log.time}</td>
-                        <td>${escapeHtml(log.device)}</td>
-                        <td>${log.fire}</td>
-                        <td><button class="ban-btn" onclick="banCurrentDevice()">Cihazı Banla</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function banCurrentDevice() {
-            if (confirm("Bu cihazı siteden kalıcı olarak banlamak istediğinize emin misiniz?")) {
-                localStorage.setItem('wedzx_banned', 'true');
-                alert("Cihaz banlandı!");
-                location.reload();
-            }
-        }
-
-        /* ==========================================
-           3. BACKGROUND CANVAS ENGINE
+           CANVAS 1: CYBERPUNK NETWORK MESH
            ========================================== */
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -1069,7 +1008,8 @@
             });
         }
 
-        let mouseX = 0, mouseY = 0;
+        let mouseX = 0;
+        let mouseY = 0;
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
@@ -1122,7 +1062,7 @@
         renderBgMesh();
 
         /* ==========================================
-           4. MATRIX CODE RAIN
+           CANVAS 2: MATRIX CODE RAIN ENGINE
            ========================================== */
         const matrixCanvas = document.getElementById('matrix-canvas');
         const mCtx = matrixCanvas.getContext('2d');
@@ -1159,7 +1099,71 @@
         setInterval(renderMatrix, 33);
 
         /* ==========================================
-           5. SENSITIVITY CALCULATION
+           STRICT TIKTOK GATEWAY & BAN SECURITY
+           ========================================== */
+        function triggerTikTokTask() {
+            window.open('https://www.tiktok.com/@wedzx_', '_blank');
+            const btn = document.getElementById('tiktok-follow-btn');
+            const statusText = document.getElementById('gateway-status-text');
+            btn.style.pointerEvents = 'none';
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> TAKİP DOĞRULANIYOR... (5s)`;
+
+            let countdown = 5;
+            const timer = setInterval(() => {
+                countdown--;
+                if(countdown > 0) {
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> TAKİP DOĞRULANIYOR... (${countdown}s)`;
+                } else {
+                    clearInterval(timer);
+                    unlockAppSystem();
+                }
+            }, 1000);
+        }
+
+        function unlockAppSystem() {
+            document.getElementById('tiktok-gateway').style.display = 'none';
+            document.getElementById('main-app-container').classList.remove('locked-app');
+            localStorage.setItem('wedzx_gateway_unlocked', 'true');
+        }
+
+        if (localStorage.getItem('wedzx_gateway_unlocked') === 'true') {
+            document.getElementById('tiktok-gateway').style.display = 'none';
+            document.getElementById('main-app-container').classList.remove('locked-app');
+        }
+
+        // Real Visit Analytics & Ban Check
+        let visits = parseInt(localStorage.getItem('wedzx_visits') || '0');
+        let userBanned = localStorage.getItem('wedzx_banned') === 'true';
+
+        if (userBanned) {
+            document.getElementById('banned-overlay').style.display = 'flex';
+        } else {
+            visits++;
+            localStorage.setItem('wedzx_visits', visits);
+        }
+
+        /* ==========================================
+           LOGO 4-CLICK ADMIN TRIGGER
+           ========================================== */
+        let logoClickCount = 0;
+        let clickTimer = null;
+
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(clickTimer);
+
+            if (logoClickCount === 4) {
+                logoClickCount = 0;
+                triggerAdminAuth();
+            } else {
+                clickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 1000);
+            }
+        }
+
+        /* ==========================================
+           SENSITIVITY ENGINE CALCULATION
            ========================================== */
         function getRandomVal(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1175,7 +1179,7 @@
             }
         }
 
-        function calculateSensitivity() {
+        function calculateV6Sensitivity() {
             const brand = document.getElementById('device-brand').value;
             const model = document.getElementById('device-model').value.trim();
             const hz = document.getElementById('refresh-rate').value;
@@ -1186,17 +1190,34 @@
                 return;
             }
 
-            let minS = brand === 'iPhone' ? 80 : 130;
-            let maxS = brand === 'iPhone' ? 150 : 200;
+            let minS, maxS;
+            if (brand === 'iPhone') {
+                minS = 80;
+                maxS = 150;
+            } else {
+                minS = 130;
+                maxS = 200;
+            }
 
-            document.getElementById('val-gen').innerText = getRandomVal(minS, maxS);
-            document.getElementById('val-red').innerText = getRandomVal(minS, maxS);
-            document.getElementById('val-2x').innerText = getRandomVal(minS, maxS);
-            document.getElementById('val-4x').innerText = getRandomVal(minS, maxS);
-            document.getElementById('val-awp').innerText = getRandomVal(minS, maxS);
-            document.getElementById('val-free').innerText = getRandomVal(minS, maxS);
+            const gen = getRandomVal(minS, maxS);
+            const red = getRandomVal(minS, maxS);
+            const x2 = getRandomVal(minS, maxS);
+            const x4 = getRandomVal(minS, maxS);
+            const awp = getRandomVal(minS, maxS);
+            const free = getRandomVal(minS, maxS);
 
-            document.getElementById('val-dpi').innerText = brand === 'iPhone' ? '120 Hızlı Kaydırma' : getRandomVal(420, 580) + ' DPI';
+            document.getElementById('val-gen').innerText = gen;
+            document.getElementById('val-red').innerText = red;
+            document.getElementById('val-2x').innerText = x2;
+            document.getElementById('val-4x').innerText = x4;
+            document.getElementById('val-awp').innerText = awp;
+            document.getElementById('val-free').innerText = free;
+
+            if (brand === 'iPhone') {
+                document.getElementById('val-dpi').innerText = '120 Hızlı Kaydırma';
+            } else {
+                document.getElementById('val-dpi').innerText = getRandomVal(420, 580) + ' DPI';
+            }
 
             const fireBtnSize = getRandomVal(42, 54) + '%';
             document.getElementById('val-fire').innerText = fireBtnSize;
@@ -1210,18 +1231,23 @@
             logs.unshift({
                 time: new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'}),
                 device: `${brand} - ${model}`,
-                fire: fireBtnSize
+                fire: fireBtnSize,
+                id: Date.now()
             });
             localStorage.setItem('wedzx_logs', JSON.stringify(logs));
         }
 
         /* ==========================================
-           6. AIM TRAINER ENGINE
+           AIM TRAINER CANVAS MODULE
            ========================================== */
         const aimCanvas = document.getElementById('aim-canvas');
         const aimCtx = aimCanvas.getContext('2d');
-        let aimActive = false, score = 0, headshots = 0, totalClicks = 0, startTime = 0;
+        let aimActive = false;
+        let score = 0;
+        let headshots = 0;
+        let totalClicks = 0;
         let target = { x: 0, y: 0, r: 25, isHead: false };
+        let startTime = 0;
 
         function resizeAimCanvas() {
             aimCanvas.width = aimCanvas.offsetWidth;
@@ -1269,7 +1295,9 @@
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
 
-            if (Math.hypot(clickX - target.x, clickY - target.y) <= target.r) {
+            const dist = Math.hypot(clickX - target.x, clickY - target.y);
+
+            if (dist <= target.r) {
                 score++;
                 if (target.isHead) headshots++;
                 spawnTarget();
@@ -1281,7 +1309,9 @@
 
         function startAimTrainer() {
             aimActive = true;
-            score = 0; headshots = 0; totalClicks = 0;
+            score = 0;
+            headshots = 0;
+            totalClicks = 0;
             startTime = Date.now();
             spawnTarget();
             drawAimScene();
@@ -1290,20 +1320,27 @@
 
         function resetAimTrainer() {
             aimActive = false;
-            score = 0; headshots = 0; totalClicks = 0;
+            score = 0;
+            headshots = 0;
+            totalClicks = 0;
             drawAimScene();
             updateAimStats();
         }
 
         function updateAimStats() {
             document.getElementById('aim-score').innerText = score;
-            document.getElementById('aim-hs').innerText = (totalClicks > 0 ? Math.round((headshots / totalClicks) * 100) : 0) + '%';
-            document.getElementById('aim-time').innerText = (score > 0 ? Math.round((Date.now() - startTime) / score) : 0) + 'ms';
+            const hsRate = totalClicks > 0 ? Math.round((headshots / totalClicks) * 100) : 0;
+            document.getElementById('aim-hs').innerText = hsRate + '%';
+
+            const elapsed = Date.now() - startTime;
+            const avgTime = score > 0 ? Math.round(elapsed / score) : 0;
+            document.getElementById('aim-time').innerText = avgTime + 'ms';
         }
+
         drawAimScene();
 
         /* ==========================================
-           7. VIP CARD & COMMUNITY SYSTEM
+           VIP CARD DYNAMIC UPDATER
            ========================================== */
         function updateVIPCard() {
             const nick = document.getElementById('ff-nick').value.trim();
@@ -1313,6 +1350,9 @@
             document.getElementById('card-id-display').innerText = id ? 'ID: ' + id : 'ID: 0000000000';
         }
 
+        /* ==========================================
+           COMMUNITY & COMMENTS SYSTEM
+           ========================================== */
         function loadCommunityComments() {
             const comments = JSON.parse(localStorage.getItem('wedzx_comments') || '[]');
             const container = document.getElementById('comments-container');
@@ -1350,7 +1390,12 @@
             }
 
             let comments = JSON.parse(localStorage.getItem('wedzx_comments') || '[]');
-            comments.unshift({ name, device: device || 'Cihaz Belirtilmedi', msg, likes: 0 });
+            comments.unshift({
+                name: name,
+                device: device || 'Cihaz Belirtilmedi',
+                msg: msg,
+                likes: 0
+            });
             localStorage.setItem('wedzx_comments', JSON.stringify(comments));
 
             document.getElementById('comm-name').value = '';
@@ -1373,11 +1418,60 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
+        loadCommunityComments();
+
+        /* ==========================================
+           SECRET ADMIN PANEL SYSTEM
+           ========================================== */
+        function triggerAdminAuth() {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function authenticateAdmin() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === 'wedzxV4xMavi') {
+                document.getElementById('admin-auth-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                loadAdminLogs();
+            } else {
+                alert('YETKİSİZ ERİŞİM: Şifre Hatalı!');
+            }
+        }
+
+        function loadAdminLogs() {
+            document.getElementById('adm-visits').innerText = localStorage.getItem('wedzx_visits') || '0';
+
+            const logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
+            const logTable = document.getElementById('adm-log-table');
+            logTable.innerHTML = '';
+
+            logs.forEach(log => {
+                logTable.innerHTML += `
+                    <tr>
+                        <td>${log.time}</td>
+                        <td>${escapeHtml(log.device)}</td>
+                        <td>${log.fire}</td>
+                        <td><button class="ban-btn" onclick="banCurrentDevice()">Cihazı Banla</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function banCurrentDevice() {
+            if (confirm("Bu cihazı siteden kalıcı olarak banlamak istediğinize emin misiniz?")) {
+                localStorage.setItem('wedzx_banned', 'true');
+                alert("Cihaz banlandı!");
+                location.reload();
+            }
+        }
+
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
-
-        loadCommunityComments();
     </script>
 </body>
 </html>
