@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEDZX v6 - Ultimate Free Fire Ecosystem</title>
+    <title>WEDZX - Ultimate Free Fire Ecosystem</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         /* ==========================================
@@ -107,6 +107,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
         }
 
         .brand-logo span {
@@ -266,7 +267,7 @@
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
 
-        .btn-v6 {
+        .btn-custom {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #ff003c 0%, #800020 100%);
@@ -286,13 +287,13 @@
             overflow: hidden;
         }
 
-        .btn-v6:hover {
+        .btn-custom:hover {
             transform: translateY(-3px) scale(1.01);
             box-shadow: 0 0 40px var(--primary);
             background: linear-gradient(135deg, #ff1a53 0%, #a30029 100%);
         }
 
-        .btn-v6:active {
+        .btn-custom:active {
             transform: translateY(1px);
         }
 
@@ -537,32 +538,6 @@
         /* ==========================================
            9. SECRET TERMINAL ADMIN PANEL
            ========================================== */
-        .admin-secret-btn {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            width: 45px;
-            height: 45px;
-            background: #000;
-            border: 1px solid var(--primary);
-            border-radius: 50%;
-            color: var(--primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--primary-glow);
-            z-index: 90;
-            font-family: 'Share Tech Mono', monospace;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .admin-secret-btn:hover {
-            transform: rotate(90deg) scale(1.1);
-            box-shadow: 0 0 25px var(--primary);
-        }
-
         .modal-overlay {
             display: none;
             position: fixed;
@@ -671,7 +646,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(3, 1, 2, 0.97);
+            background: rgba(3, 1, 2, 0.98);
             z-index: 80;
             display: flex;
             flex-direction: column;
@@ -682,7 +657,7 @@
         }
 
         .gateway-card {
-            background: rgba(15, 3, 7, 0.9);
+            background: rgba(15, 3, 7, 0.95);
             border: 2px solid var(--primary);
             border-radius: 20px;
             padding: 40px;
@@ -710,35 +685,35 @@
        ========================================== -->
     <div id="banned-overlay">
         <h1 style="font-size: 3.5rem; text-shadow: 0 0 20px red;">SİSTEM ENGELLENDİ</h1>
-        <p style="color: #fff; margin-top: 15px; font-size: 1.2rem;">wedzx v6 güvenlik protokolleri tarafından erişiminiz kalıcı olarak kısıtlandı.</p>
+        <p style="color: #fff; margin-top: 15px; font-size: 1.2rem;">WEDZX güvenlik protokolleri tarafından erişiminiz kalıcı olarak kısıtlandı.</p>
         <p style="color: #666; margin-top: 8px;">Cihaz kütüphanesi / IP adresi kararlarda saklıdır.</p>
     </div>
 
     <!-- ==========================================
-       TIKTOK FOLLOW GATEWAY (LOCK SYSTEM)
+       TIKTOK FOLLOW GATEWAY (STRICT LOCK SYSTEM)
        ========================================== -->
     <div id="tiktok-gateway">
         <div class="gateway-card">
-            <h1 style="font-family:'Orbitron'; color:var(--primary); font-size:2.2rem; text-shadow:0 0 15px var(--primary);">WEDZX v6 LOCK</h1>
-            <p style="margin-top:15px; color:#ddd; font-size:1.1rem; line-height:1.5;">Gelişmiş Free Fire Hassasiyet ve Aim Trainer Motoruna erişmek için TikTok hesabımızı takip etmelisiniz.</p>
-            <a href="https://www.tiktok.com/@wedzx_" target="_blank" onclick="completeGateway()" style="display:inline-block; margin-top:25px; padding:16px 32px; background:#000; border:2px solid var(--primary); color:#fff; font-family:'Orbitron'; font-size:1.2rem; font-weight:bold; border-radius:12px; text-decoration:none; box-shadow:0 0 25px var(--primary-glow); transition:0.3s;">
+            <h1 style="font-family:'Orbitron'; color:var(--primary); font-size:2.2rem; text-shadow:0 0 15px var(--primary);">WEDZX KİLİTLİ</h1>
+            <p style="margin-top:15px; color:#ddd; font-size:1.1rem; line-height:1.5;">Gelişmiş Free Fire Hassasiyet ve Aim Trainer Motoruna erişmek için TikTok hesabımızı takip etmek **zorunludur**.</p>
+            
+            <a href="https://www.tiktok.com/@wedzx_" target="_blank" onclick="confirmFollow()" style="display:inline-block; margin-top:25px; padding:16px 32px; background:#000; border:2px solid var(--primary); color:#fff; font-family:'Orbitron'; font-size:1.2rem; font-weight:bold; border-radius:12px; text-decoration:none; box-shadow:0 0 25px var(--primary-glow); transition:0.3s;">
                 TAKİP ET: @wedzx_
             </a>
-            <p style="margin-top:15px; font-size:0.85rem; color:#888;">Takip butonuna tıkladıktan sonra sistem kilidi otomatik kalkacaktır.</p>
+            
+            <p style="margin-top:15px; font-size:0.85rem; color:#888;">Takip butonuna bastıktan sonra site otomatik açılacaktır.</p>
         </div>
     </div>
 
-    <!-- ==========================================
-       DYNAMIC CANVAS VFX BACKGROUNDS
-       ========================================== -->
+    <!-- Dynamic Backgrounds -->
     <canvas id="bg-canvas"></canvas>
     <canvas id="matrix-canvas"></canvas>
 
     <!-- ==========================================
-       NAVIGATION BAR
+       NAVIGATION BAR (LOGO WRAPS 4-CLICK ADMIN TRIGGER)
        ========================================== -->
     <nav class="navbar">
-        <div class="brand-logo">WEDZX <span>v6 SYSTEM</span></div>
+        <div class="brand-logo" id="main-logo" onclick="handleLogoClick()">WEDZX <span>SYSTEM</span></div>
         <ul class="nav-links">
             <li class="nav-item active" onclick="scrollToSection('sens-section')">Hassasiyet</li>
             <li class="nav-item" onclick="scrollToSection('aim-section')">Aim Trainer</li>
@@ -755,7 +730,7 @@
         <!-- SECTION 1: SENSITIVITY ENGINE -->
         <div class="panel-box" id="sens-section">
             <div class="section-title">
-                <i>⚡</i> Free Fire v6 Meta Hassasiyet Motoru
+                <i>⚡</i> Free Fire Meta Hassasiyet Motoru
             </div>
 
             <div class="grid-2">
@@ -800,7 +775,7 @@
                 </div>
             </div>
 
-            <button class="btn-v6" onclick="calculateV6Sensitivity()">Hassasiyet & DPI Motorunu Çalıştır</button>
+            <button class="btn-custom" onclick="calculateSensitivity()">Hassasiyet & DPI Motorunu Çalıştır</button>
 
             <!-- Results Output -->
             <div class="sens-results-box" id="sens-output">
@@ -866,8 +841,8 @@
                 <canvas id="aim-canvas"></canvas>
 
                 <div style="display:flex; gap:15px; width:100%;">
-                    <button class="btn-v6" style="padding:10px; font-size:1rem;" onclick="startAimTrainer()">Poligonu Başlat</button>
-                    <button class="btn-v6" style="padding:10px; font-size:1rem; background:linear-gradient(135deg, #333, #111);" onclick="resetAimTrainer()">Sıfırla</button>
+                    <button class="btn-custom" style="padding:10px; font-size:1rem;" onclick="startAimTrainer()">Poligonu Başlat</button>
+                    <button class="btn-custom" style="padding:10px; font-size:1rem; background:linear-gradient(135deg, #333, #111);" onclick="resetAimTrainer()">Sıfırla</button>
                 </div>
             </div>
         </div>
@@ -892,7 +867,7 @@
             <div class="card-preview">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div class="card-header-text">WEDZX VIP MEMBER</div>
-                    <div style="font-family:'Share Tech Mono'; color:var(--gold-accent);">v6 VERIFIED</div>
+                    <div style="font-family:'Share Tech Mono'; color:var(--gold-accent);">VERIFIED</div>
                 </div>
                 <div class="card-body-text">
                     <h2 id="card-nick-display">WEDZX_PLAYER</h2>
@@ -917,7 +892,7 @@
                     <input type="text" id="comm-device" placeholder="Kullandığınız Cihaz">
                 </div>
                 <textarea id="comm-msg" rows="3" placeholder="Ayar denemeniz nasıl geçti? Yorumunuzu yazın..."></textarea>
-                <button class="btn-v6" style="padding:12px; font-size:1rem;" onclick="submitCommunityComment()">Yorum Yayınla</button>
+                <button class="btn-custom" style="padding:12px; font-size:1rem;" onclick="submitCommunityComment()">Yorum Yayınla</button>
             </div>
 
             <div class="comments-list" id="comments-container">
@@ -928,21 +903,19 @@
     </div>
 
     <!-- ==========================================
-       SECRET ADMIN TRIGGER & MODAL TERMINAL
+       SECRET ADMIN MODAL TERMINAL
        ========================================== -->
-    <div class="admin-secret-btn" onclick="triggerAdminAuth()">v6</div>
-
     <div class="modal-overlay" id="admin-modal">
         <div class="terminal-box">
             <div class="terminal-header">
-                <span>WEDZX v6 TERMINAL // SECURITY & CONTROL PANEL</span>
+                <span>WEDZX TERMINAL // SECURITY & CONTROL PANEL</span>
                 <span style="cursor:pointer;" onclick="closeAdminModal()">[X]</span>
             </div>
             
             <div id="admin-auth-view" style="padding:40px; text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:20px;">ADMIN AUTHENTICATION</h2>
                 <input type="password" id="admin-pass-input" placeholder="Güvenlik Şifresini Girin..." style="max-width:350px; margin:0 auto; display:block;">
-                <button class="btn-v6" style="max-width:350px; margin:20px auto 0 auto;" onclick="authenticateAdmin()">Sisteme Bağlan</button>
+                <button class="btn-custom" style="max-width:350px; margin:20px auto 0 auto;" onclick="authenticateAdmin()">Sisteme Bağlan</button>
             </div>
 
             <div class="terminal-body" id="admin-dashboard-view" style="display:none;">
@@ -973,16 +946,105 @@
        FOOTER
        ========================================== -->
     <footer>
-        <p>WEDZX v6 Free Fire System &copy; 2026. Tüm Hakları Saklıdır.</p>
+        <p>WEDZX Free Fire System &copy; 2026. Tüm Hakları Saklıdır.</p>
         <p style="margin-top:5px; font-size:0.8rem; color:#666;">Bu site tamamen özel algoritmalarla Free Fire hassasiyet optimizasyonu sunar.</p>
     </footer>
 
     <!-- ==========================================
-       10. JAVASCRIPT SYSTEM ENGINE
+       JAVASCRIPT ENGINE
        ========================================== -->
     <script>
         /* ==========================================
-           CANVAS 1: CYBERPUNK NETWORK MESH
+           1. STRICT TIKTOK LOCK SYSTEM
+           ========================================== */
+        function confirmFollow() {
+            // Sadece takip butonuna tıklanınca kilit kalıcı olarak açılır
+            localStorage.setItem('wedzx_followed', 'true');
+            setTimeout(() => {
+                document.getElementById('tiktok-gateway').style.display = 'none';
+            }, 1000);
+        }
+
+        // Sayfa yüklendiğinde takip edilip edilmediğini kontrol et
+        if (localStorage.getItem('wedzx_followed') === 'true') {
+            document.getElementById('tiktok-gateway').style.display = 'none';
+        }
+
+        // Ban ve Ziyaretçi Kontrolü
+        let visits = parseInt(localStorage.getItem('wedzx_visits') || '0');
+        let userBanned = localStorage.getItem('wedzx_banned') === 'true';
+
+        if (userBanned) {
+            document.getElementById('banned-overlay').style.display = 'flex';
+        } else {
+            visits++;
+            localStorage.setItem('wedzx_visits', visits);
+        }
+
+        /* ==========================================
+           2. SECRET ADMIN LOGIC (4-CLICKS ON LOGO)
+           ========================================== */
+        let logoClickCount = 0;
+        let logoClickTimer;
+
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+
+            if (logoClickCount === 4) {
+                logoClickCount = 0;
+                document.getElementById('admin-modal').style.display = 'flex';
+            } else {
+                // 2 saniye içinde 4 kez tıklanmazsa sayacı sıfırla
+                logoClickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 2000);
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function authenticateAdmin() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === 'wedzxV4xMavi') {
+                document.getElementById('admin-auth-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                loadAdminLogs();
+            } else {
+                alert('YETKİSİZ ERİŞİM: Şifre Hatalı!');
+            }
+        }
+
+        function loadAdminLogs() {
+            document.getElementById('adm-visits').innerText = localStorage.getItem('wedzx_visits') || '0';
+            const logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
+            const logTable = document.getElementById('adm-log-table');
+            logTable.innerHTML = '';
+
+            logs.forEach(log => {
+                logTable.innerHTML += `
+                    <tr>
+                        <td>${log.time}</td>
+                        <td>${escapeHtml(log.device)}</td>
+                        <td>${log.fire}</td>
+                        <td><button class="ban-btn" onclick="banCurrentDevice()">Cihazı Banla</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function banCurrentDevice() {
+            if (confirm("Bu cihazı siteden kalıcı olarak banlamak istediğinize emin misiniz?")) {
+                localStorage.setItem('wedzx_banned', 'true');
+                alert("Cihaz banlandı!");
+                location.reload();
+            }
+        }
+
+        /* ==========================================
+           3. BACKGROUND CANVAS ENGINE
            ========================================== */
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -1007,8 +1069,7 @@
             });
         }
 
-        let mouseX = 0;
-        let mouseY = 0;
+        let mouseX = 0, mouseY = 0;
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
@@ -1032,7 +1093,6 @@
                 bgCtx.shadowColor = '#ff003c';
                 bgCtx.fill();
 
-                // Interactive cursor tether
                 let mouseDist = Math.hypot(n.x - mouseX, n.y - mouseY);
                 if (mouseDist < 150) {
                     bgCtx.beginPath();
@@ -1062,7 +1122,7 @@
         renderBgMesh();
 
         /* ==========================================
-           CANVAS 2: MATRIX CODE RAIN ENGINE
+           4. MATRIX CODE RAIN
            ========================================== */
         const matrixCanvas = document.getElementById('matrix-canvas');
         const mCtx = matrixCanvas.getContext('2d');
@@ -1074,7 +1134,7 @@
         resizeMatrix();
         window.addEventListener('resize', resizeMatrix);
 
-        const chars = 'WEDZXv6FFSENSITIVITY0192837465839210';
+        const chars = 'WEDZXFFSENSITIVITY0192837465839210';
         const fontSize = 14;
         const columns = Math.floor(matrixCanvas.width / fontSize);
         const drops = Array(columns).fill(1);
@@ -1099,32 +1159,7 @@
         setInterval(renderMatrix, 33);
 
         /* ==========================================
-           TIKTOK GATEWAY & BAN SECURITY SYSTEM
-           ========================================== */
-        function completeGateway() {
-            setTimeout(() => {
-                document.getElementById('tiktok-gateway').style.display = 'none';
-                localStorage.setItem('wedzx_v6_gateway', 'unlocked');
-            }, 2000);
-        }
-
-        if (localStorage.getItem('wedzx_v6_gateway') === 'unlocked') {
-            document.getElementById('tiktok-gateway').style.display = 'none';
-        }
-
-        // Real Visit Analytics & Ban Check
-        let visits = parseInt(localStorage.getItem('wedzx_v6_visits') || '0');
-        let userBanned = localStorage.getItem('wedzx_v6_banned') === 'true';
-
-        if (userBanned) {
-            document.getElementById('banned-overlay').style.display = 'flex';
-        } else {
-            visits++;
-            localStorage.setItem('wedzx_v6_visits', visits);
-        }
-
-        /* ==========================================
-           SENSITIVITY ENGINE CALCULATION (v6 META)
+           5. SENSITIVITY CALCULATION
            ========================================== */
         function getRandomVal(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1140,7 +1175,7 @@
             }
         }
 
-        function calculateV6Sensitivity() {
+        function calculateSensitivity() {
             const brand = document.getElementById('device-brand').value;
             const model = document.getElementById('device-model').value.trim();
             const hz = document.getElementById('refresh-rate').value;
@@ -1151,36 +1186,17 @@
                 return;
             }
 
-            let minS, maxS;
+            let minS = brand === 'iPhone' ? 80 : 130;
+            let maxS = brand === 'iPhone' ? 150 : 200;
 
-            // Strict Rules based on prompt specs
-            if (brand === 'iPhone') {
-                minS = 80;
-                maxS = 150;
-            } else {
-                minS = 130;
-                maxS = 200;
-            }
+            document.getElementById('val-gen').innerText = getRandomVal(minS, maxS);
+            document.getElementById('val-red').innerText = getRandomVal(minS, maxS);
+            document.getElementById('val-2x').innerText = getRandomVal(minS, maxS);
+            document.getElementById('val-4x').innerText = getRandomVal(minS, maxS);
+            document.getElementById('val-awp').innerText = getRandomVal(minS, maxS);
+            document.getElementById('val-free').innerText = getRandomVal(minS, maxS);
 
-            const gen = getRandomVal(minS, maxS);
-            const red = getRandomVal(minS, maxS);
-            const x2 = getRandomVal(minS, maxS);
-            const x4 = getRandomVal(minS, maxS);
-            const awp = getRandomVal(minS, maxS);
-            const free = getRandomVal(minS, maxS);
-
-            document.getElementById('val-gen').innerText = gen;
-            document.getElementById('val-red').innerText = red;
-            document.getElementById('val-2x').innerText = x2;
-            document.getElementById('val-4x').innerText = x4;
-            document.getElementById('val-awp').innerText = awp;
-            document.getElementById('val-free').innerText = free;
-
-            if (brand === 'iPhone') {
-                document.getElementById('val-dpi').innerText = '120 Hızlı Kaydırma';
-            } else {
-                document.getElementById('val-dpi').innerText = getRandomVal(420, 580) + ' DPI';
-            }
+            document.getElementById('val-dpi').innerText = brand === 'iPhone' ? '120 Hızlı Kaydırma' : getRandomVal(420, 580) + ' DPI';
 
             const fireBtnSize = getRandomVal(42, 54) + '%';
             document.getElementById('val-fire').innerText = fireBtnSize;
@@ -1190,28 +1206,22 @@
 
             document.getElementById('sens-output').style.display = 'block';
 
-            // Real Data Logging for Admin Panel
-            let logs = JSON.parse(localStorage.getItem('wedzx_v6_logs') || '[]');
+            let logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
             logs.unshift({
                 time: new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'}),
                 device: `${brand} - ${model}`,
-                fire: fireBtnSize,
-                id: Date.now()
+                fire: fireBtnSize
             });
-            localStorage.setItem('wedzx_v6_logs', JSON.stringify(logs));
+            localStorage.setItem('wedzx_logs', JSON.stringify(logs));
         }
 
         /* ==========================================
-           AIM TRAINER CANVAS MODULE
+           6. AIM TRAINER ENGINE
            ========================================== */
         const aimCanvas = document.getElementById('aim-canvas');
         const aimCtx = aimCanvas.getContext('2d');
-        let aimActive = false;
-        let score = 0;
-        let headshots = 0;
-        let totalClicks = 0;
+        let aimActive = false, score = 0, headshots = 0, totalClicks = 0, startTime = 0;
         let target = { x: 0, y: 0, r: 25, isHead: false };
-        let startTime = 0;
 
         function resizeAimCanvas() {
             aimCanvas.width = aimCanvas.offsetWidth;
@@ -1238,7 +1248,6 @@
                 return;
             }
 
-            // Target Outer Ring
             aimCtx.beginPath();
             aimCtx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
             aimCtx.fillStyle = target.isHead ? '#ff003c' : '#00f0ff';
@@ -1246,7 +1255,6 @@
             aimCtx.shadowColor = target.isHead ? '#ff003c' : '#00f0ff';
             aimCtx.fill();
 
-            // Inner Bullseye
             aimCtx.beginPath();
             aimCtx.arc(target.x, target.y, target.r * 0.4, 0, Math.PI * 2);
             aimCtx.fillStyle = '#ffffff';
@@ -1261,9 +1269,7 @@
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
 
-            const dist = Math.hypot(clickX - target.x, clickY - target.y);
-
-            if (dist <= target.r) {
+            if (Math.hypot(clickX - target.x, clickY - target.y) <= target.r) {
                 score++;
                 if (target.isHead) headshots++;
                 spawnTarget();
@@ -1275,9 +1281,7 @@
 
         function startAimTrainer() {
             aimActive = true;
-            score = 0;
-            headshots = 0;
-            totalClicks = 0;
+            score = 0; headshots = 0; totalClicks = 0;
             startTime = Date.now();
             spawnTarget();
             drawAimScene();
@@ -1286,27 +1290,20 @@
 
         function resetAimTrainer() {
             aimActive = false;
-            score = 0;
-            headshots = 0;
-            totalClicks = 0;
+            score = 0; headshots = 0; totalClicks = 0;
             drawAimScene();
             updateAimStats();
         }
 
         function updateAimStats() {
             document.getElementById('aim-score').innerText = score;
-            const hsRate = totalClicks > 0 ? Math.round((headshots / totalClicks) * 100) : 0;
-            document.getElementById('aim-hs').innerText = hsRate + '%';
-
-            const elapsed = Date.now() - startTime;
-            const avgTime = score > 0 ? Math.round(elapsed / score) : 0;
-            document.getElementById('aim-time').innerText = avgTime + 'ms';
+            document.getElementById('aim-hs').innerText = (totalClicks > 0 ? Math.round((headshots / totalClicks) * 100) : 0) + '%';
+            document.getElementById('aim-time').innerText = (score > 0 ? Math.round((Date.now() - startTime) / score) : 0) + 'ms';
         }
-
         drawAimScene();
 
         /* ==========================================
-           VIP CARD DYNAMIC UPDATER
+           7. VIP CARD & COMMUNITY SYSTEM
            ========================================== */
         function updateVIPCard() {
             const nick = document.getElementById('ff-nick').value.trim();
@@ -1316,11 +1313,8 @@
             document.getElementById('card-id-display').innerText = id ? 'ID: ' + id : 'ID: 0000000000';
         }
 
-        /* ==========================================
-           COMMUNITY & COMMENTS SYSTEM
-           ========================================== */
         function loadCommunityComments() {
-            const comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
+            const comments = JSON.parse(localStorage.getItem('wedzx_comments') || '[]');
             const container = document.getElementById('comments-container');
             container.innerHTML = '';
 
@@ -1355,14 +1349,9 @@
                 return;
             }
 
-            let comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
-            comments.unshift({
-                name: name,
-                device: device || 'Cihaz Belirtilmedi',
-                msg: msg,
-                likes: 0
-            });
-            localStorage.setItem('wedzx_v6_comments', JSON.stringify(comments));
+            let comments = JSON.parse(localStorage.getItem('wedzx_comments') || '[]');
+            comments.unshift({ name, device: device || 'Cihaz Belirtilmedi', msg, likes: 0 });
+            localStorage.setItem('wedzx_comments', JSON.stringify(comments));
 
             document.getElementById('comm-name').value = '';
             document.getElementById('comm-device').value = '';
@@ -1372,10 +1361,10 @@
         }
 
         function likeComment(index) {
-            let comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
+            let comments = JSON.parse(localStorage.getItem('wedzx_comments') || '[]');
             if (comments[index]) {
                 comments[index].likes = (comments[index].likes || 0) + 1;
-                localStorage.setItem('wedzx_v6_comments', JSON.stringify(comments));
+                localStorage.setItem('wedzx_comments', JSON.stringify(comments));
                 loadCommunityComments();
             }
         }
@@ -1384,61 +1373,11 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        loadCommunityComments();
-
-        /* ==========================================
-           SECRET ADMIN PANEL SYSTEM
-           ========================================== */
-        function triggerAdminAuth() {
-            document.getElementById('admin-modal').style.display = 'flex';
-        }
-
-        function closeAdminModal() {
-            document.getElementById('admin-modal').style.display = 'none';
-        }
-
-        function authenticateAdmin() {
-            const pass = document.getElementById('admin-pass-input').value;
-            // Secret Admin Password provided
-            if (pass === 'wedzxV4xMavi') {
-                document.getElementById('admin-auth-view').style.display = 'none';
-                document.getElementById('admin-dashboard-view').style.display = 'block';
-                loadAdminLogs();
-            } else {
-                alert('YETKİSİZ ERİŞİM: Şifre Hatalı!');
-            }
-        }
-
-        function loadAdminLogs() {
-            document.getElementById('adm-visits').innerText = localStorage.getItem('wedzx_v6_visits') || '0';
-
-            const logs = JSON.parse(localStorage.getItem('wedzx_v6_logs') || '[]');
-            const logTable = document.getElementById('adm-log-table');
-            logTable.innerHTML = '';
-
-            logs.forEach(log => {
-                logTable.innerHTML += `
-                    <tr>
-                        <td>${log.time}</td>
-                        <td>${escapeHtml(log.device)}</td>
-                        <td>${log.fire}</td>
-                        <td><button class="ban-btn" onclick="banCurrentDevice()">Cihazı Banla</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function banCurrentDevice() {
-            if (confirm("Bu cihazı siteden kalıcı olarak banlamak istediğinize emin misiniz?")) {
-                localStorage.setItem('wedzx_v6_banned', 'true');
-                alert("Cihaz banlandı!");
-                location.reload();
-            }
-        }
-
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
+
+        loadCommunityComments();
     </script>
 </body>
 </html>
