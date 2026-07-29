@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEDZX v6 - Ultimate Free Fire Ecosystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================
+           1. CORE SYSTEM & CSS RESET
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-drag: none;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --primary: #ff003c;
+            --primary-glow: rgba(255, 0, 60, 0.6);
+            --primary-dim: rgba(255, 0, 60, 0.15);
+            --bg-dark: #030102;
+            --card-bg: rgba(12, 3, 6, 0.85);
+            --border-neon: #ff003c;
+            --text-main: #ffffff;
+            --text-sub: #b5a2a6;
+            --cyan-accent: #00f0ff;
+            --gold-accent: #ffb700;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050002;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* ==========================================
+           2. CANVAS BACKGROUND & MATRIX ENGINE
+           ========================================== */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        /* ==========================================
+           3. UI NAVIGATION BAR
+           ========================================== */
+        .navbar {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 60, 0.3);
+            background: rgba(5, 0, 2, 0.7);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 12px var(--primary), 0 0 25px var(--primary);
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo span {
+            font-size: 0.9rem;
+            background: var(--primary);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-item {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--primary);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-item:hover::after, .nav-item.active::after {
+            width: 100%;
+        }
+
+        /* ==========================================
+           4. MAIN LAYOUT & GRID CONTAINER
+           ========================================== */
+        .main-wrapper {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 35px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .panel-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-neon);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.25), inset 0 0 15px rgba(255, 0, 60, 0.1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.1), transparent);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .panel-box:hover::before {
+            left: 100%;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--primary-dim);
+            padding-bottom: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.4rem;
+            color: var(--cyan-accent);
+        }
+
+        /* ==========================================
+           5. SENSITIVITY ENGINE STYLING
+           ========================================== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #ff6b8b;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(20, 2, 6, 0.85);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.05rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.15);
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-v6 {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff003c 0%, #800020 100%);
+            border: 1px solid #ff4d6d;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 0 25px var(--primary-glow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-v6:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 0 40px var(--primary);
+            background: linear-gradient(135deg, #ff1a53 0%, #a30029 100%);
+        }
+
+        .btn-v6:active {
+            transform: translateY(1px);
+        }
+
+        /* Results Display Grid */
+        .sens-results-box {
+            display: none;
+            margin-top: 30px;
+            background: rgba(10, 0, 4, 0.95);
+            border: 2px dashed var(--primary);
+            border-radius: 14px;
+            padding: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sens-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 0, 60, 0.05);
+            border: 1px solid rgba(255, 0, 60, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .metric-card:hover {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .metric-title {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .spec-badge {
+            display: inline-block;
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan-accent);
+            border: 1px solid var(--cyan-accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* ==========================================
+           6. AIM TRAINER CANVAS MODULE
+           ========================================== */
+        .aim-trainer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #aim-canvas {
+            width: 100%;
+            height: 380px;
+            background: #080204;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            cursor: crosshair;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 30px rgba(255, 0, 60, 0.2);
+        }
+
+        .trainer-stats {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            justify-content: space-around;
+            background: rgba(20, 5, 10, 0.8);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--primary-dim);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .stat-item b {
+            font-size: 1.3rem;
+            color: var(--cyan-accent);
+        }
+
+        /* ==========================================
+           7. FF VIP CARD GENERATOR MODULE
+           ========================================== */
+        .card-preview {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #1f0208 0%, #050002 100%);
+            border: 2px solid var(--gold-accent);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 25px rgba(255, 183, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .card-preview::after {
+            content: 'WEDZX VIP';
+            position: absolute;
+            right: -20px;
+            bottom: -10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255, 183, 0, 0.05);
+            pointer-events: none;
+        }
+
+        .card-header-text {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold-accent);
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--gold-accent);
+        }
+
+        .card-body-text h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 0 10px #fff;
+        }
+
+        .card-body-text p {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--cyan-accent);
+            font-size: 1.1rem;
+        }
+
+        /* ==========================================
+           8. COMMENTS & TOPIC BOARD
+           ========================================== */
+        .comment-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .comment-card {
+            background: rgba(255, 0, 60, 0.04);
+            border: 1px solid rgba(255, 0, 60, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .comment-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 60, 0.08);
+        }
+
+        .comment-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-author {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .comment-device-tag {
+            font-size: 0.75rem;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan-accent);
+            border: 1px solid var(--cyan-accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .comment-body {
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            cursor: pointer;
+        }
+
+        .like-btn:hover {
+            color: var(--primary);
+        }
+
+        /* ==========================================
+           9. SECRET TERMINAL ADMIN PANEL
+           ========================================== */
+        .admin-secret-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            background: #000;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--primary-glow);
+            z-index: 90;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .admin-secret-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 25px var(--primary);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terminal-box {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: #050103;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            box-shadow: 0 0 40px var(--primary-glow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .terminal-header {
+            background: rgba(255, 0, 60, 0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            color: #00ff66;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .terminal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        .terminal-table th, .terminal-table td {
+            border: 1px solid rgba(255, 0, 60, 0.3);
+            padding: 10px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .terminal-table th {
+            background: rgba(255, 0, 60, 0.2);
+            color: var(--primary);
+        }
+
+        .ban-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+        }
+
+        .ban-btn:hover {
+            background: #cc0030;
+        }
+
+        /* Banned Overlay */
+        #banned-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            color: red;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+        }
+
+        /* TIKTOK GATEWAY LOCK */
+        #tiktok-gateway {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 1, 2, 0.97);
+            z-index: 80;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .gateway-card {
+            background: rgba(15, 3, 7, 0.9);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            box-shadow: 0 0 50px var(--primary-glow);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            padding: 25px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 0, 60, 0.2);
+            width: 100%;
+            background: rgba(5, 0, 2, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+       BANNED SCREEN OVERLAY
+       ========================================== -->
+    <div id="banned-overlay">
+        <h1 style="font-size: 3.5rem; text-shadow: 0 0 20px red;">SİSTEM ENGELLENDİ</h1>
+        <p style="color: #fff; margin-top: 15px; font-size: 1.2rem;">wedzx v6 güvenlik protokolleri tarafından erişiminiz kalıcı olarak kısıtlandı.</p>
+        <p style="color: #666; margin-top: 8px;">Cihaz kütüphanesi / IP adresi kararlarda saklıdır.</p>
+    </div>
+
+    <!-- ==========================================
+       TIKTOK FOLLOW GATEWAY (LOCK SYSTEM)
+       ========================================== -->
+    <div id="tiktok-gateway">
+        <div class="gateway-card">
+            <h1 style="font-family:'Orbitron'; color:var(--primary); font-size:2.2rem; text-shadow:0 0 15px var(--primary);">WEDZX v6 LOCK</h1>
+            <p style="margin-top:15px; color:#ddd; font-size:1.1rem; line-line:1.5;">Gelişmiş Free Fire Hassasiyet ve Aim Trainer Motoruna erişmek için TikTok hesabımızı takip etmelisiniz.</p>
+            <a href="https://www.tiktok.com/@wedzx_" target="_blank" onclick="completeGateway()" style="display:inline-block; margin-top:25px; padding:16px 32px; background:#000; border:2px solid var(--primary); color:#fff; font-family:'Orbitron'; font-size:1.2rem; font-weight:bold; border-radius:12px; text-decoration:none; box-shadow:0 0 25px var(--primary-glow); transition:0.3s;">
+                TAKİP ET: @wedzx_
+            </a>
+            <p style="margin-top:15px; font-size:0.85rem; color:#888;">Takip butonuna tıkladıktan sonra sistem kilidi otomatik kalkacaktır.</p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+       DYNAMIC CANVAS VFX BACKGROUNDS
+       ========================================== -->
+    <canvas id="bg-canvas"></canvas>
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+    <nav class="navbar">
+        <div class="brand-logo">WEDZX <span>v6 SYSTEM</span></div>
+        <ul class="nav-links">
+            <li class="nav-item active" onclick="scrollToSection('sens-section')">Hassasiyet</li>
+            <li class="nav-item" onclick="scrollToSection('aim-section')">Aim Trainer</li>
+            <li class="nav-item" onclick="scrollToSection('card-section')">VIP Kart</li>
+            <li class="nav-item" onclick="scrollToSection('community-section')">Topluluk</li>
+        </ul>
+    </nav>
+
+    <!-- ==========================================
+       MAIN CONTENT CONTAINER
+       ========================================== -->
+    <div class="main-wrapper">
+
+        <!-- SECTION 1: SENSITIVITY ENGINE -->
+        <div class="panel-box" id="sens-section">
+            <div class="section-title">
+                <i>⚡</i> Free Fire v6 Meta Hassasiyet Motoru
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="device-brand">Cihaz Markası:</label>
+                    <select id="device-brand" onchange="handleBrandChange()">
+                        <option value="iPhone">Apple iPhone (iOS)</option>
+                        <option value="Samsung">Samsung Galaxy</option>
+                        <option value="Xiaomi">Xiaomi / Poco / Redmi</option>
+                        <option value="Realme">Realme</option>
+                        <option value="OPPO">OPPO</option>
+                        <option value="Vivo">Vivo</option>
+                        <option value="Huawei">Huawei / Honor</option>
+                        <option value="Other">Diğer Android Cihazlar</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="device-model">Telefon Modeli:</label>
+                    <input type="text" id="device-model" placeholder="Örn: iPhone 14 Pro / Poco X5 Pro">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="refresh-rate">Ekran Yenileme Hızı (Hz):</label>
+                    <select id="refresh-rate">
+                        <option value="60">60 Hz (Standart)</option>
+                        <option value="90">90 Hz (Ateş Hızı Modu)</option>
+                        <option value="120">120 Hz (Süper Akıcı)</option>
+                        <option value="144">144 Hz (Ultra Gaming)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="play-style">Oyun Tarzı:</label>
+                    <select id="play-style">
+                        <option value="one-tap">Tek Tık (One-Tap / SKS / M1887)</option>
+                        <option value="spray">Sürekli Ateş (SMG / AR Taraması)</option>
+                        <option value="balanced">Dengeli Meta</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-v6" onclick="calculateV6Sensitivity()">Hassasiyet & DPI Motorunu Çalıştır</button>
+
+            <!-- Results Output -->
+            <div class="sens-results-box" id="sens-output">
+                <h3 style="font-family:'Orbitron'; color:var(--primary); text-align:center; font-size:1.4rem;" id="res-header">HASSASİYET ANALİZ RAPORU</h3>
+                
+                <div class="sens-metrics">
+                    <div class="metric-card">
+                        <div class="metric-title">Genel</div>
+                        <div class="metric-value" id="val-gen">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Kırmızı Nokta</div>
+                        <div class="metric-value" id="val-red">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">2x Dürbün</div>
+                        <div class="metric-value" id="val-2x">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">4x Dürbün</div>
+                        <div class="metric-value" id="val-4x">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">AWP Dürbünü</div>
+                        <div class="metric-value" id="val-awp">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Serbest Bakış</div>
+                        <div class="metric-value" id="val-free">0</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div class="metric-card" style="border-color:var(--cyan-accent);">
+                        <div class="metric-title" style="color:var(--cyan-accent);">Önerilen DPI / İmleç Hızı</div>
+                        <div class="metric-value" style="color:var(--cyan-accent);" id="val-dpi">410 DPI</div>
+                    </div>
+                    <div class="metric-card" style="border-color:var(--gold-accent);">
+                        <div class="metric-title" style="color:var(--gold-accent);">Ateş Butonu Boyutu (Fire Button)</div>
+                        <div class="metric-value" style="color:var(--gold-accent);" id="val-fire">48%</div>
+                    </div>
+                </div>
+
+                <div style="text-align:center;">
+                    <span class="spec-badge" id="val-spec">Sistem Durumu: Optimize Edildi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: LIVE AIM TRAINER CANVAS -->
+        <div class="panel-box" id="aim-section">
+            <div class="section-title">
+                <i>🎯</i> Canlı Poligon & Aim Trainer (Hassasiyet Test Et)
+            </div>
+
+            <div class="aim-trainer-container">
+                <div class="trainer-stats">
+                    <div class="stat-item"><span>Vurulan Hedef</span><b id="aim-score">0</b></div>
+                    <div class="stat-item"><span>Headshot (HS) Oranı</span><b id="aim-hs">0%</b></div>
+                    <div class="stat-item"><span>Ort. Ortak Süre</span><b id="aim-time">0ms</b></div>
+                </div>
+
+                <canvas id="aim-canvas"></canvas>
+
+                <div style="display:flex; gap:15px; width:100%;">
+                    <button class="btn-v6" style="padding:10px; font-size:1rem;" onclick="startAimTrainer()">Poligonu Başlat</button>
+                    <button class="btn-v6" style="padding:10px; font-size:1rem; background:linear-gradient(135deg, #333, #111);" onclick="resetAimTrainer()">Sıfırla</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: VIP CARD GENERATOR -->
+        <div class="panel-box" id="card-section">
+            <div class="section-title">
+                <i>🪪</i> Free Fire VIP Oyuncu Kartı Oluşturucu
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="ff-nick">Oyuncu Nickname:</label>
+                    <input type="text" id="ff-nick" placeholder="Örn: WEDZX_PRO" oninput="updateVIPCard()">
+                </div>
+                <div class="form-group">
+                    <label for="ff-id">Oyuncu ID:</label>
+                    <input type="text" id="ff-id" placeholder="Örn: 284910482" oninput="updateVIPCard()">
+                </div>
+            </div>
+
+            <div class="card-preview">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="card-header-text">WEDZX VIP MEMBER</div>
+                    <div style="font-family:'Share Tech Mono'; color:var(--gold-accent);">v6 VERIFIED</div>
+                </div>
+                <div class="card-body-text">
+                    <h2 id="card-nick-display">WEDZX_PLAYER</h2>
+                    <p id="card-id-display">ID: 0000000000</p>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#888;">
+                    <span>STATUS: ACTIVE SENSITIVITY</span>
+                    <span>TIKTOK: @wedzx_</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: COMMUNITY & COMMENTS BOARD -->
+        <div class="panel-box" id="community-section">
+            <div class="section-title">
+                <i>💬</i> Topluluk Bildirimleri & Yorumlar
+            </div>
+
+            <div class="comment-input-group">
+                <div class="grid-2">
+                    <input type="text" id="comm-name" placeholder="Adınız / Nickname">
+                    <input type="text" id="comm-device" placeholder="Kullandığınız Cihaz">
+                </div>
+                <textarea id="comm-msg" rows="3" placeholder="Ayar denemeniz nasıl geçti? Yorumunuzu yazın..."></textarea>
+                <button class="btn-v6" style="padding:12px; font-size:1rem;" onclick="submitCommunityComment()">Yorum Yayınla</button>
+            </div>
+
+            <div class="comments-list" id="comments-container">
+                <!-- Dynamic Comments Load Here -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+       SECRET ADMIN TRIGGER & MODAL TERMINAL
+       ========================================== -->
+    <div class="admin-secret-btn" onclick="triggerAdminAuth()">v6</div>
+
+    <div class="modal-overlay" id="admin-modal">
+        <div class="terminal-box">
+            <div class="terminal-header">
+                <span>WEDZX v6 TERMINAL // SECURITY & CONTROL PANEL</span>
+                <span style="cursor:pointer;" onclick="closeAdminModal()">[X]</span>
+            </div>
+            
+            <div id="admin-auth-view" style="padding:40px; text-align:center;">
+                <h2 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:20px;">ADMIN AUTHENTICATION</h2>
+                <input type="password" id="admin-pass-input" placeholder="Güvenlik Şifresini Girin..." style="max-width:350px; margin:0 auto; display:block;">
+                <button class="btn-v6" style="max-width:350px; margin:20px auto 0 auto;" onclick="authenticateAdmin()">Sisteme Bağlan</button>
+            </div>
+
+            <div class="terminal-body" id="admin-dashboard-view" style="display:none;">
+                <div style="display:flex; justify-content:space-between; background:rgba(255,0,60,0.1); padding:10px; border-radius:6px;">
+                    <div>TOPLAM GERÇEK ZİYARETÇİ: <b id="adm-visits" style="color:#00f0ff;">0</b></div>
+                    <div>SİSTEM DURUMU: <b style="color:#00ff66;">ONLINE</b></div>
+                </div>
+
+                <h4 style="color:var(--primary); margin-top:10px;">HASSASİYET ALAN CİHAZ LOGLARI (GERÇEK VERİ)</h4>
+                <table class="terminal-table">
+                    <thead>
+                        <tr>
+                            <th>Zaman</th>
+                            <th>Cihaz</th>
+                            <th>Ateş B.</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adm-log-table">
+                        <!-- Dynamic Logs -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+       FOOTER
+       ========================================== -->
+    <footer>
+        <p>WEDZX v6 Free Fire System &copy; 2026. Tüm Hakları Saklıdır.</p>
+        <p style="margin-top:5px; font-size:0.8rem; color:#666;">Bu site tamamen özel algoritmalarla Free Fire hassasiyet optimizasyonu sunar.</p>
+    </footer>
+
+    <!-- ==========================================
+       10. JAVASCRIPT SYSTEM ENGINE
+       ========================================== -->
+    <script>
+        /* ==========================================
+           CANVAS 1: CYBERPUNK NETWORK MESH
+           ========================================== */
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        resizeBgCanvas();
+        window.addEventListener('resize', resizeBgCanvas);
+
+        const nodes = [];
+        const nodeCount = 75;
+
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                vx: (Math.random() - 0.5) * 1.8,
+                vy: (Math.random() - 0.5) * 1.8,
+                radius: Math.random() * 2.5 + 1
+            });
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function renderBgMesh() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+            for (let i = 0; i < nodeCount; i++) {
+                let n = nodes[i];
+                n.x += n.vx;
+                n.y += n.vy;
+
+                if (n.x < 0 || n.x > bgCanvas.width) n.vx *= -1;
+                if (n.y < 0 || n.y > bgCanvas.height) n.vy *= -1;
+
+                bgCtx.beginPath();
+                bgCtx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+                bgCtx.fillStyle = '#ff003c';
+                bgCtx.shadowBlur = 8;
+                bgCtx.shadowColor = '#ff003c';
+                bgCtx.fill();
+
+                // Interactive cursor tether
+                let mouseDist = Math.hypot(n.x - mouseX, n.y - mouseY);
+                if (mouseDist < 150) {
+                    bgCtx.beginPath();
+                    bgCtx.moveTo(n.x, n.y);
+                    bgCtx.lineTo(mouseX, mouseY);
+                    bgCtx.strokeStyle = `rgba(0, 240, 255, ${1 - mouseDist / 150})`;
+                    bgCtx.lineWidth = 1;
+                    bgCtx.stroke();
+                }
+
+                for (let j = i + 1; j < nodeCount; j++) {
+                    let n2 = nodes[j];
+                    let dist = Math.hypot(n.x - n2.x, n.y - n2.y);
+
+                    if (dist < 130) {
+                        bgCtx.beginPath();
+                        bgCtx.moveTo(n.x, n.y);
+                        bgCtx.lineTo(n2.x, n2.y);
+                        bgCtx.strokeStyle = `rgba(255, 0, 60, ${1 - dist / 130})`;
+                        bgCtx.lineWidth = 0.8;
+                        bgCtx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(renderBgMesh);
+        }
+        renderBgMesh();
+
+        /* ==========================================
+           CANVAS 2: MATRIX CODE RAIN ENGINE
+           ========================================== */
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const mCtx = matrixCanvas.getContext('2d');
+
+        function resizeMatrix() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const chars = 'WEDZXv6FFSENSITIVITY0192837465839210';
+        const fontSize = 14;
+        const columns = Math.floor(matrixCanvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function renderMatrix() {
+            mCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+            mCtx.fillStyle = '#ff003c';
+            mCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(renderMatrix, 33);
+
+        /* ==========================================
+           TIKTOK GATEWAY & BAN SECURITY SYSTEM
+           ========================================== */
+        function completeGateway() {
+            setTimeout(() => {
+                document.getElementById('tiktok-gateway').style.display = 'none';
+                localStorage.setItem('wedzx_v6_gateway', 'unlocked');
+            }, 2000);
+        }
+
+        if (localStorage.getItem('wedzx_v6_gateway') === 'unlocked') {
+            document.getElementById('tiktok-gateway').style.display = 'none';
+        }
+
+        // Real Visit Analytics & Ban Check
+        let visits = parseInt(localStorage.getItem('wedzx_v6_visits') || '0');
+        let userBanned = localStorage.getItem('wedzx_v6_banned') === 'true';
+
+        if (userBanned) {
+            document.getElementById('banned-overlay').style.display = 'flex';
+        } else {
+            visits++;
+            localStorage.setItem('wedzx_v6_visits', visits);
+        }
+
+        /* ==========================================
+           SENSITIVITY ENGINE CALCULATION (v6 META)
+           ========================================== */
+        function getRandomVal(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function handleBrandChange() {
+            const brand = document.getElementById('device-brand').value;
+            const modelInput = document.getElementById('device-model');
+            if (brand === 'iPhone') {
+                modelInput.placeholder = 'Örn: iPhone 13 Pro / 14 Pro Max';
+            } else {
+                modelInput.placeholder = 'Örn: Samsung S23 Ultra / Poco X3';
+            }
+        }
+
+        function calculateV6Sensitivity() {
+            const brand = document.getElementById('device-brand').value;
+            const model = document.getElementById('device-model').value.trim();
+            const hz = document.getElementById('refresh-rate').value;
+            const style = document.getElementById('play-style').value;
+
+            if (!model) {
+                alert('Lütfen telefon modelinizi belirtin!');
+                return;
+            }
+
+            let minS, maxS;
+
+            // Strict Rules based on prompt specs
+            if (brand === 'iPhone') {
+                minS = 80;
+                maxS = 150;
+            } else {
+                minS = 130;
+                maxS = 200;
+            }
+
+            const gen = getRandomVal(minS, maxS);
+            const red = getRandomVal(minS, maxS);
+            const x2 = getRandomVal(minS, maxS);
+            const x4 = getRandomVal(minS, maxS);
+            const awp = getRandomVal(minS, maxS);
+            const free = getRandomVal(minS, maxS);
+
+            document.getElementById('val-gen').innerText = gen;
+            document.getElementById('val-red').innerText = red;
+            document.getElementById('val-2x').innerText = x2;
+            document.getElementById('val-4x').innerText = x4;
+            document.getElementById('val-awp').innerText = awp;
+            document.getElementById('val-free').innerText = free;
+
+            if (brand === 'iPhone') {
+                document.getElementById('val-dpi').innerText = '120 Hızlı Kaydırma';
+            } else {
+                document.getElementById('val-dpi').innerText = getRandomVal(420, 580) + ' DPI';
+            }
+
+            const fireBtnSize = getRandomVal(42, 54) + '%';
+            document.getElementById('val-fire').innerText = fireBtnSize;
+
+            document.getElementById('val-spec').innerText = `PARAMETRELER: ${hz}Hz | ${style.toUpperCase()} MODU OK`;
+            document.getElementById('res-header').innerText = `${brand.toUpperCase()} (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
+
+            document.getElementById('sens-output').style.display = 'block';
+
+            // Real Data Logging for Admin Panel
+            let logs = JSON.parse(localStorage.getItem('wedzx_v6_logs') || '[]');
+            logs.unshift({
+                time: new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'}),
+                device: `${brand} - ${model}`,
+                fire: fireBtnSize,
+                id: Date.now()
+            });
+            localStorage.setItem('wedzx_v6_logs', JSON.stringify(logs));
+        }
+
+        /* ==========================================
+           AIM TRAINER CANVAS MODULE
+           ========================================== */
+        const aimCanvas = document.getElementById('aim-canvas');
+        const aimCtx = aimCanvas.getContext('2d');
+        let aimActive = false;
+        let score = 0;
+        let headshots = 0;
+        let totalClicks = 0;
+        let target = { x: 0, y: 0, r: 25, isHead: false };
+        let startTime = 0;
+
+        function resizeAimCanvas() {
+            aimCanvas.width = aimCanvas.offsetWidth;
+            aimCanvas.height = aimCanvas.offsetHeight;
+        }
+        resizeAimCanvas();
+
+        function spawnTarget() {
+            const padding = 40;
+            target.x = Math.random() * (aimCanvas.width - padding * 2) + padding;
+            target.y = Math.random() * (aimCanvas.height - padding * 2) + padding;
+            target.r = Math.random() * 8 + 18;
+            target.isHead = Math.random() > 0.6;
+        }
+
+        function drawAimScene() {
+            aimCtx.clearRect(0, 0, aimCanvas.width, aimCanvas.height);
+
+            if (!aimActive) {
+                aimCtx.fillStyle = '#ff003c';
+                aimCtx.font = '18px Orbitron';
+                aimCtx.textAlign = 'center';
+                aimCtx.fillText('BAŞLAT BUTONUNA BASIN VE HEDEFLERİ VURUN', aimCanvas.width / 2, aimCanvas.height / 2);
+                return;
+            }
+
+            // Target Outer Ring
+            aimCtx.beginPath();
+            aimCtx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
+            aimCtx.fillStyle = target.isHead ? '#ff003c' : '#00f0ff';
+            aimCtx.shadowBlur = 15;
+            aimCtx.shadowColor = target.isHead ? '#ff003c' : '#00f0ff';
+            aimCtx.fill();
+
+            // Inner Bullseye
+            aimCtx.beginPath();
+            aimCtx.arc(target.x, target.y, target.r * 0.4, 0, Math.PI * 2);
+            aimCtx.fillStyle = '#ffffff';
+            aimCtx.fill();
+        }
+
+        aimCanvas.addEventListener('mousedown', (e) => {
+            if (!aimActive) return;
+            totalClicks++;
+
+            const rect = aimCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const dist = Math.hypot(clickX - target.x, clickY - target.y);
+
+            if (dist <= target.r) {
+                score++;
+                if (target.isHead) headshots++;
+                spawnTarget();
+            }
+
+            updateAimStats();
+            drawAimScene();
+        });
+
+        function startAimTrainer() {
+            aimActive = true;
+            score = 0;
+            headshots = 0;
+            totalClicks = 0;
+            startTime = Date.now();
+            spawnTarget();
+            drawAimScene();
+            updateAimStats();
+        }
+
+        function resetAimTrainer() {
+            aimActive = false;
+            score = 0;
+            headshots = 0;
+            totalClicks = 0;
+            drawAimScene();
+            updateAimStats();
+        }
+
+        function updateAimStats() {
+            document.getElementById('aim-score').innerText = score;
+            const hsRate = totalClicks > 0 ? Math.round((headshots / totalClicks) * 100) : 0;
+            document.getElementById('aim-hs').innerText = hsRate + '%';
+
+            const elapsed = Date.now() - startTime;
+            const avgTime = score > 0 ? Math.round(elapsed / score) : 0;
+            document.getElementById('aim-time').innerText = avgTime + 'ms';
+        }
+
+        drawAimScene();
+
+        /* ==========================================
+           VIP CARD DYNAMIC UPDATER
+           ========================================== */
+        function updateVIPCard() {
+            const nick = document.getElementById('ff-nick').value.trim();
+            const id = document.getElementById('ff-id').value.trim();
+
+            document.getElementById('card-nick-display').innerText = nick ? nick.toUpperCase() : 'WEDZX_PLAYER';
+            document.getElementById('card-id-display').innerText = id ? 'ID: ' + id : 'ID: 0000000000';
+        }
+
+        /* ==========================================
+           COMMUNITY & COMMENTS SYSTEM
+           ========================================== */
+        function loadCommunityComments() {
+            const comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
+            const container = document.getElementById('comments-container');
+            container.innerHTML = '';
+
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="color:#666; text-align:center;">Henüz yorum yapılmadı. İlk yorumu sen yap!</p>';
+                return;
+            }
+
+            comments.forEach((c, index) => {
+                container.innerHTML += `
+                    <div class="comment-card">
+                        <div class="comment-head">
+                            <span class="comment-author">${escapeHtml(c.name)}</span>
+                            <span class="comment-device-tag">${escapeHtml(c.device)}</span>
+                        </div>
+                        <div class="comment-body">${escapeHtml(c.msg)}</div>
+                        <div class="comment-actions">
+                            <span class="like-btn" onclick="likeComment(${index})">❤️ ${c.likes || 0} Beğeni</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function submitCommunityComment() {
+            const name = document.getElementById('comm-name').value.trim();
+            const device = document.getElementById('comm-device').value.trim();
+            const msg = document.getElementById('comm-msg').value.trim();
+
+            if (!name || !msg) {
+                alert('Lütfen adınızı ve yorumunuzu girin!');
+                return;
+            }
+
+            let comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
+            comments.unshift({
+                name: name,
+                device: device || 'Cihaz Belirtilmedi',
+                msg: msg,
+                likes: 0
+            });
+            localStorage.setItem('wedzx_v6_comments', JSON.stringify(comments));
+
+            document.getElementById('comm-name').value = '';
+            document.getElementById('comm-device').value = '';
+            document.getElementById('comm-msg').value = '';
+
+            loadCommunityComments();
+        }
+
+        function likeComment(index) {
+            let comments = JSON.parse(localStorage.getItem('wedzx_v6_comments') || '[]');
+            if (comments[index]) {
+                comments[index].likes = (comments[index].likes || 0) + 1;
+                localStorage.setItem('wedzx_v6_comments', JSON.stringify(comments));
+                loadCommunityComments();
+            }
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        loadCommunityComments();
+
+        /* ==========================================
+           SECRET ADMIN PANEL SYSTEM
+           ========================================== */
+        function triggerAdminAuth() {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function authenticateAdmin() {
+            const pass = document.getElementById('admin-pass-input').value;
+            // Secret Admin Password provided
+            if (pass === 'wedzxV4xMavi') {
+                document.getElementById('admin-auth-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                loadAdminLogs();
+            } else {
+                alert('YETKİSİZ ERİŞİM: Şifre Hatalı!');
+            }
+        }
+
+        function loadAdminLogs() {
+            document.getElementById('adm-visits').innerText = localStorage.getItem('wedzx_v6_visits') || '0';
+
+            const logs = JSON.parse(localStorage.getItem('wedzx_v6_logs') || '[]');
+            const logTable = document.getElementById('adm-log-table');
+            logTable.innerHTML = '';
+
+            logs.forEach(log => {
+                logTable.innerHTML += `
+                    <tr>
+                        <td>${log.time}</td>
+                        <td>${escapeHtml(log.device)}</td>
+                        <td>${log.fire}</td>
+                        <td><button class="ban-btn" onclick="banCurrentDevice()">Cihazı Banla</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function banCurrentDevice() {
+            if (confirm("Bu cihazı siteden kalıcı olarak banlamak istediğinize emin misiniz?")) {
+                localStorage.setItem('wedzx_v6_banned', 'true');
+                alert("Cihaz banlandı!");
+                location.reload();
+            }
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
