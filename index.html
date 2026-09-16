@@ -914,7 +914,7 @@
             const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
             if (brand === 'iPad') {
-                // iPad için özel aralık (130 - 200) ve ateş tuşu (30 - 47)
+                // iPad için özel hassasiyet aralığı (130 - 200)
                 document.getElementById('val-gen').innerText = r(130, 200);
                 document.getElementById('val-red').innerText = r(130, 200);
                 document.getElementById('val-2x').innerText = r(130, 200);
@@ -922,12 +922,9 @@
                 document.getElementById('val-awp').innerText = r(130, 190);
                 document.getElementById('val-free').innerText = r(130, 200);
                 document.getElementById('val-dpi').innerText = 'iPad Native OS';
-                
-                const fireBtn = r(30, 47) + '%';
-                document.getElementById('val-fire').innerText = fireBtn;
                 document.getElementById('res-header').innerText = `APPLE IPAD (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
             } else {
-                // Diğer cihazlar için standart aralık
+                // Diğer cihazlar için standart hassasiyet aralığı
                 document.getElementById('val-gen').innerText = r(120, 195);
                 document.getElementById('val-red').innerText = r(120, 195);
                 document.getElementById('val-2x').innerText = r(110, 185);
@@ -935,16 +932,17 @@
                 document.getElementById('val-awp').innerText = r(80, 140);
                 document.getElementById('val-free').innerText = r(100, 160);
                 document.getElementById('val-dpi').innerText = brand === 'iPhone' ? '120 Hızlı Kaydırma' : r(420, 580) + ' DPI';
-                
-                const fireBtn = r(42, 54) + '%';
-                document.getElementById('val-fire').innerText = fireBtn;
                 document.getElementById('res-header').innerText = `${brand.toUpperCase()} (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
             }
+
+            // Bütün cihazlar için güncellenmiş ortak ateş butonu aralığı (30 - 48)
+            const fireBtn = r(30, 48) + '%';
+            document.getElementById('val-fire').innerText = fireBtn;
 
             document.getElementById('sens-output').style.display = 'block';
 
             let logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
-            logs.unshift({ time: new Date().toLocaleTimeString(), device: `${brand} - ${model}`, fire: document.getElementById('val-fire').innerText });
+            logs.unshift({ time: new Date().toLocaleTimeString(), device: `${brand} - ${model}`, fire: fireBtn });
             localStorage.setItem('wedzx_logs', JSON.stringify(logs));
         }
 
