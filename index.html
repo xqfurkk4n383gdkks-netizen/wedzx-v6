@@ -628,7 +628,7 @@
         </ul>
     </nav>
 
-    <!-- MAIN CONTAINER (BİLEREK LOCKED-APP SINIFI EKLENDİ) -->
+    <!-- MAIN CONTAINER -->
     <div class="main-wrapper locked-app" id="main-app-container">
 
         <!-- SECTION 1 -->
@@ -639,6 +639,7 @@
                     <label for="device-brand">Cihaz Markası:</label>
                     <select id="device-brand" onchange="handleBrandChange()">
                         <option value="iPhone">Apple iPhone (iOS)</option>
+                        <option value="iPad">Apple iPad (Tablet)</option>
                         <option value="Samsung">Samsung Galaxy</option>
                         <option value="Xiaomi">Xiaomi / Poco / Redmi</option>
                         <option value="Realme">Realme</option>
@@ -650,7 +651,7 @@
                 </div>
                 <div class="form-group">
                     <label for="device-model">Telefon Modeli:</label>
-                    <input type="text" id="device-model" placeholder="Örn: iPhone 14 Pro / Poco X5 Pro">
+                    <input type="text" id="device-model" placeholder="Örn: iPhone 14 Pro / iPad Pro 11">
                 </div>
             </div>
             <div class="grid-2">
@@ -896,31 +897,54 @@
         // Sensitivity Engine
         function handleBrandChange() {
             const brand = document.getElementById('device-brand').value;
-            document.getElementById('device-model').placeholder = brand === 'iPhone' ? 'Örn: iPhone 14 Pro' : 'Örn: Samsung S23 Ultra';
+            if (brand === 'iPhone') {
+                document.getElementById('device-model').placeholder = 'Örn: iPhone 14 Pro';
+            } else if (brand === 'iPad') {
+                document.getElementById('device-model').placeholder = 'Örn: iPad Pro 11 / iPad Air';
+            } else {
+                document.getElementById('device-model').placeholder = 'Örn: Samsung S23 Ultra';
+            }
         }
 
         function calculateV6Sensitivity() {
             const model = document.getElementById('device-model').value.trim();
-            if (!model) { alert('Lütfen telefon modelini yazın!'); return; }
+            if (!model) { alert('Lütfen cihaz modelini yazın!'); return; }
 
             const brand = document.getElementById('device-brand').value;
             const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-            document.getElementById('val-gen').innerText = r(120, 195);
-            document.getElementById('val-red').innerText = r(120, 195);
-            document.getElementById('val-2x').innerText = r(110, 185);
-            document.getElementById('val-4x').innerText = r(110, 185);
-            document.getElementById('val-awp').innerText = r(80, 140);
-            document.getElementById('val-free').innerText = r(100, 160);
-            document.getElementById('val-dpi').innerText = brand === 'iPhone' ? '120 Hızlı Kaydırma' : r(420, 580) + ' DPI';
-            
-            const fireBtn = r(42, 54) + '%';
-            document.getElementById('val-fire').innerText = fireBtn;
-            document.getElementById('res-header').innerText = `${brand.toUpperCase()} (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
+            if (brand === 'iPad') {
+                // iPad için özel aralık (130 - 200) ve ateş tuşu (30 - 47)
+                document.getElementById('val-gen').innerText = r(130, 200);
+                document.getElementById('val-red').innerText = r(130, 200);
+                document.getElementById('val-2x').innerText = r(130, 200);
+                document.getElementById('val-4x').innerText = r(130, 200);
+                document.getElementById('val-awp').innerText = r(130, 190);
+                document.getElementById('val-free').innerText = r(130, 200);
+                document.getElementById('val-dpi').innerText = 'iPad Native OS';
+                
+                const fireBtn = r(30, 47) + '%';
+                document.getElementById('val-fire').innerText = fireBtn;
+                document.getElementById('res-header').innerText = `APPLE IPAD (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
+            } else {
+                // Diğer cihazlar için standart aralık
+                document.getElementById('val-gen').innerText = r(120, 195);
+                document.getElementById('val-red').innerText = r(120, 195);
+                document.getElementById('val-2x').innerText = r(110, 185);
+                document.getElementById('val-4x').innerText = r(110, 185);
+                document.getElementById('val-awp').innerText = r(80, 140);
+                document.getElementById('val-free').innerText = r(100, 160);
+                document.getElementById('val-dpi').innerText = brand === 'iPhone' ? '120 Hızlı Kaydırma' : r(420, 580) + ' DPI';
+                
+                const fireBtn = r(42, 54) + '%';
+                document.getElementById('val-fire').innerText = fireBtn;
+                document.getElementById('res-header').innerText = `${brand.toUpperCase()} (${model.toUpperCase()}) OPTİMİZE EDİLDİ`;
+            }
+
             document.getElementById('sens-output').style.display = 'block';
 
             let logs = JSON.parse(localStorage.getItem('wedzx_logs') || '[]');
-            logs.unshift({ time: new Date().toLocaleTimeString(), device: `${brand} - ${model}`, fire: fireBtn });
+            logs.unshift({ time: new Date().toLocaleTimeString(), device: `${brand} - ${model}`, fire: document.getElementById('val-fire').innerText });
             localStorage.setItem('wedzx_logs', JSON.stringify(logs));
         }
 
